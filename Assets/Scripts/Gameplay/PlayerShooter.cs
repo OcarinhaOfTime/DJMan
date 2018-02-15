@@ -11,7 +11,8 @@ public class PlayerShooter : MonoBehaviour {
     private AudioSource audioSource;
 
     private float timer = 666;
-
+    public Transform arrow;
+    public Transform arm;
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -21,16 +22,39 @@ public class PlayerShooter : MonoBehaviour {
     }
 
     private void Update() {
+        
+    }
+
+    private void LateUpdate() {
+        Vector2 dir = Vector2.right * playerPhy.facingSign;
         if (Input.GetKeyDown(KeyCode.E) && timer > fireRate) {
             timer = 0;
             var proj = pool.GetPoolable();
             proj.transform.position = cannonTip.position;
             proj.gameObject.SetActive(true);
-            var dir = Vector2.right * playerPhy.facingSign;
             proj.Launch(dir.normalized);
             audioSource.Play();
         }
 
         timer += Time.deltaTime;
+
+        Vector2 aimDir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        var angle = Vector2.SignedAngle(Vector2.right, dir);
+        if (aimDir.magnitude > .1f) {
+            angle = Vector2.SignedAngle(Vector2.right, aimDir);
+            //angle = Mathf.Repeat(angle, 360);
+            angle = (int)(angle / 45);
+            angle = angle * 45;
+        }
+
+        arrow.rotation = Quaternion.Euler(0, 0, angle);
+        arrow.localScale = new Vector3(playerPhy.facingSign, 1, 1);
+        arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
+        if(playerPhy.facingSign < 0) {
+            arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
+        } else {
+            arm.rotation = Quaternion.Euler(0, 0, angle + 66);
+        }
+        
     }
 }
