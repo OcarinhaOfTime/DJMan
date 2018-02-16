@@ -12,7 +12,7 @@ public class PlayerShooter : MonoBehaviour {
 
     private float timer = 666;
     public Transform arrow;
-    public Transform arm;
+    //public Transform arm;
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -27,7 +27,7 @@ public class PlayerShooter : MonoBehaviour {
 
     private void LateUpdate() {
         Vector2 dir = Vector2.right * playerPhy.facingSign;
-        if (Input.GetKeyDown(KeyCode.E) && timer > fireRate) {
+        if (Input.GetButtonDown("Fire1") && timer > fireRate) {
             timer = 0;
             var proj = pool.GetPoolable();
             proj.transform.position = cannonTip.position;
@@ -49,12 +49,12 @@ public class PlayerShooter : MonoBehaviour {
 
         arrow.rotation = Quaternion.Euler(0, 0, angle);
         arrow.localScale = new Vector3(playerPhy.facingSign, 1, 1);
-        arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
-        if(playerPhy.facingSign < 0) {
-            arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
-        } else {
-            arm.rotation = Quaternion.Euler(0, 0, angle + 66);
-        }
+        //arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
+        //if(playerPhy.facingSign < 0) {
+        //    arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
+        //} else {
+        //    arm.rotation = Quaternion.Euler(0, 0, angle + 66);
+        //}
         
     }
 }
