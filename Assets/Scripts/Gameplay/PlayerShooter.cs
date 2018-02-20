@@ -27,17 +27,6 @@ public class PlayerShooter : MonoBehaviour {
 
     private void LateUpdate() {
         Vector2 dir = Vector2.right * playerPhy.facingSign;
-        if (Input.GetButtonDown("Fire1") && timer > fireRate) {
-            timer = 0;
-            var proj = pool.GetPoolable();
-            proj.transform.position = cannonTip.position;
-            proj.gameObject.SetActive(true);
-            proj.Launch(dir.normalized);
-            audioSource.Play();
-        }
-
-        timer += Time.deltaTime;
-
         Vector2 aimDir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         var angle = Vector2.SignedAngle(Vector2.right, dir);
         if (aimDir.magnitude > .1f) {
@@ -49,6 +38,19 @@ public class PlayerShooter : MonoBehaviour {
 
         arrow.rotation = Quaternion.Euler(0, 0, angle);
         arrow.localScale = new Vector3(playerPhy.facingSign, 1, 1);
+
+        if (Input.GetButtonDown("Fire1") && timer > fireRate) {
+            timer = 0;
+            var proj = pool.GetPoolable();
+            proj.transform.position = cannonTip.position;
+            proj.gameObject.SetActive(true);
+            proj.Launch(Quaternion.Euler(0, 0, angle) * Vector2.right);
+            audioSource.Play();
+        }
+
+        timer += Time.deltaTime;
+
+        
         //arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
         //if(playerPhy.facingSign < 0) {
         //    arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
