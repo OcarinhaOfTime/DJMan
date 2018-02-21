@@ -5,6 +5,7 @@ Shader "Custom/Music"
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         [PerRendererData] _MainTex_SO("Scale and Offset", Vector) = (1,1,0,0)
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
+		_Mask ("Mask", 2D) = "white" {}
         _Brightness("Brightness", Float) = 1
         _DanceAmmount("Brightness", Range(0, 1)) = 1
 	}
@@ -44,6 +45,7 @@ Shader "Custom/Music"
 			half _DanceAmmount;
 			sampler2D _MainTex;
             float4 _MainTex_SO;
+			sampler2D _Mask;
 
             float2 TransformTex(float2 uv, float4 st){
                 return uv * st.xy + st.zw;
@@ -62,9 +64,12 @@ Shader "Custom/Music"
 			{
 				half4 tex = tex2D(_MainTex, i.uv);
                 half4 col = half4(0, 0, 0, 1);
-                for(int i=0; i<8; i++){
-                    col.rgb += _BandColors[i] * _Band[i]* _Brightness;
-                }
+				half mask = tex2D(_Mask, i.uv).r;
+				int ind = lerp(0, 7.9, mask);
+				col.rgb = _BandColors[ind] * _Band[ind]* _Brightness;
+                // for(int i=0; i<8; i++){
+                //     col.rgb += _BandColors[i] * _Band[i]* _Brightness;
+                // }
 				return lerp(tex, col, _DanceAmmount);
 			}
 			ENDCG
