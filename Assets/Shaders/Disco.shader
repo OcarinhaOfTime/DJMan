@@ -1,4 +1,4 @@
-Shader "Custom/Music"
+Shader "Custom/Disco"
 {
     Properties
 	{
@@ -65,11 +65,8 @@ Shader "Custom/Music"
 				half4 tex = tex2D(_MainTex, i.uv);
                 half4 col = half4(0, 0, 0, 1);
 				half mask = tex2D(_Mask, i.uv).r;
-				int ind = lerp(0, 7.9, mask);
+				int ind = lerp(0, 7.9, mask + 1 / 16.0);
 				col.rgb = _BandColors[ind] * _Band[ind]* _Brightness;
-                // for(int i=0; i<8; i++){
-                //     col.rgb += _BandColors[i] * _Band[i]* _Brightness;
-                // }
 				return lerp(tex, col, _DanceAmmount);
 			}
 			ENDCG
