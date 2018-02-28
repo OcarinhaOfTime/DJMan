@@ -12,6 +12,8 @@ public class Projectile : MonoBehaviour, IPoolable {
     private bool launched;
 
     private void FixedUpdate() {
+        var angle = -Vector2.SignedAngle(velocity.normalized, Vector2.right);
+        transform.rotation = Quaternion.Euler(0, 0, angle);
         transform.position += velocity * Time.fixedDeltaTime;
     }
 
@@ -21,6 +23,9 @@ public class Projectile : MonoBehaviour, IPoolable {
 
     public void Launch(Vector2 dir) {
         velocity = dir * speed;
+
+        var angle = -Vector2.SignedAngle(velocity.normalized, Vector2.right);
+        transform.rotation = Quaternion.Euler(0, 0, angle);
         launched = true;
     }
 

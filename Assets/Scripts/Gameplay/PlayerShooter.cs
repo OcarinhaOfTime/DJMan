@@ -22,10 +22,6 @@ public class PlayerShooter : MonoBehaviour {
     }
 
     private void Update() {
-        
-    }
-
-    private void LateUpdate() {
         Vector2 dir = Vector2.right * playerPhy.facingSign;
         Vector2 aimDir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         var angle = Vector2.SignedAngle(Vector2.right, dir);
@@ -36,19 +32,28 @@ public class PlayerShooter : MonoBehaviour {
             angle = angle * 45;
         }
 
-        arrow.rotation = Quaternion.Euler(0, 0, angle);
-        arrow.localScale = new Vector3(playerPhy.facingSign, 1, 1);
-
         if (Input.GetButtonDown("Fire1") && timer > fireRate) {
             timer = 0;
             var proj = pool.GetPoolable();
             proj.transform.position = cannonTip.position;
             proj.gameObject.SetActive(true);
-            proj.Launch(Quaternion.Euler(0, 0, angle) * Vector2.right);
+            Vector2 projDir = Quaternion.Euler(0, 0, angle) * Vector2.right;
+            proj.Launch(projDir + playerPhy.deltaVelocity);
             audioSource.Play();
         }
 
+        arrow.rotation = Quaternion.Euler(0, 0, angle);
+        arrow.localScale = new Vector3(playerPhy.facingSign, 1, 1);
+
         timer += Time.deltaTime;
+    }
+
+    private void LateUpdate() {
+        
+
+        
+
+        
 
         
         //arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
