@@ -12,7 +12,9 @@ public class PlayerShooter : MonoBehaviour {
 
     private float timer = 666;
     public Transform arrow;
-    //public Transform arm;
+    public Transform arm;
+    public float angle;
+    private Vector3 shootPos;
 
     private void Start() {
         audioSource = GetComponent<AudioSource>();
@@ -24,7 +26,7 @@ public class PlayerShooter : MonoBehaviour {
     private void Update() {
         Vector2 dir = Vector2.right * playerPhy.facingSign;
         Vector2 aimDir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        var angle = Vector2.SignedAngle(Vector2.right, dir);
+        angle = Vector2.SignedAngle(Vector2.right, dir);
         if (aimDir.magnitude > .1f) {
             angle = Vector2.SignedAngle(Vector2.right, aimDir);
             //angle = Mathf.Repeat(angle, 360);
@@ -35,7 +37,7 @@ public class PlayerShooter : MonoBehaviour {
         if (Input.GetButtonDown("Fire1") && timer > fireRate) {
             timer = 0;
             var proj = pool.GetPoolable();
-            proj.transform.position = cannonTip.position;
+            proj.transform.position = (Vector2)shootPos + playerPhy.deltaVelocity;
             proj.gameObject.SetActive(true);
             Vector2 projDir = Quaternion.Euler(0, 0, angle) * Vector2.right;
             proj.Launch(projDir + Vector2.Scale(playerPhy.deltaVelocity, Vector2.right));
@@ -49,19 +51,13 @@ public class PlayerShooter : MonoBehaviour {
     }
 
     private void LateUpdate() {
-        
+        arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
+        if (playerPhy.facingSign < 0) {
+            arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
+        } else {
+            arm.rotation = Quaternion.Euler(0, 0, angle + 66);
+        }
 
-        
-
-        
-
-        
-        //arm.localScale = new Vector3(playerPhy.facingSign, playerPhy.facingSign, 1);
-        //if(playerPhy.facingSign < 0) {
-        //    arm.rotation = Quaternion.Euler(0, 0, angle + 66 - 135);
-        //} else {
-        //    arm.rotation = Quaternion.Euler(0, 0, angle + 66);
-        //}
-        
+        shootPos = cannonTip.position;
     }
 }
