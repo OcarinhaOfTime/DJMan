@@ -96,7 +96,20 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Move(float h_input, bool jump) {
-        if(h_input == 0) {
+        if (Input.GetKey(KeyCode.Q)) {
+            velocity.x -= desacceleration * lastDir * Time.fixedDeltaTime;
+
+            if (Sign(velocity.x) != lastDir) {
+                lastDir = 0;
+                velocity.x = 0;
+            }
+
+            if(h_input != 0) {
+                facingRight = h_input > 0;
+                lastDir = h_input;
+            }                
+        }
+        else if(h_input == 0) {
             velocity.x -= desacceleration * lastDir * Time.fixedDeltaTime;
             
             if(Sign(velocity.x) != lastDir) {

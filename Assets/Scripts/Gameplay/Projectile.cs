@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour, IPoolable {
         ProjectilePool.instance.pool.RecyclePoolable(this);
     }
 
-    private void OnCollisionEnter(Collision collision) {
+    private void OnCollisionEnter2D(Collision2D collision) {
         velocity = Vector3.Reflect(velocity, collision.contacts[0].normal);
         print(name + "i do hit something " + collision.collider.name);
         RecycleME();

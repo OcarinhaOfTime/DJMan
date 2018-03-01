@@ -38,7 +38,7 @@ public class PlayerShooter : MonoBehaviour {
             proj.transform.position = cannonTip.position;
             proj.gameObject.SetActive(true);
             Vector2 projDir = Quaternion.Euler(0, 0, angle) * Vector2.right;
-            proj.Launch(projDir + playerPhy.deltaVelocity);
+            proj.Launch(projDir + Vector2.Scale(playerPhy.deltaVelocity, Vector2.right));
             audioSource.Play();
         }
 
